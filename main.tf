@@ -21,9 +21,6 @@ resource "azurerm_storage_container" "example" {
   container_access_type = "private"
 }
 
-provider "azurerm" {
-  features {}
-}
 
 resource "azurerm_resource_group" "example" {
   name     = azurerm_resource_group.example.name
