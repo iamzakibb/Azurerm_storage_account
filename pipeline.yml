@@ -11,14 +11,6 @@ variables:
   storageAccountName: 'examplestorageacct'
   containerName: 'tfstate'
   tfStateKey: 'terraform.tfstate'
-  appServicePlanName: 'example-appserviceplan'
-  appServiceName: 'example-appservice'
-  appInsightsName: 'example-appinsights'
-  metricAlertName: 'example-metric-alert'
-  actionGroupName: 'example-actiongroup'
-  emailReceiverName: 'sendtoexample'
-  emailReceiverAddress: 'example@example.com'
-
 steps:
 # Step 1: Initialize Terraform and apply the storage account configuration
 - task: UseTerraform@0
