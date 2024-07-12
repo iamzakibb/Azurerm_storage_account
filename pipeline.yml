@@ -1,5 +1,5 @@
 trigger:
-- main
+- none
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -7,39 +7,23 @@ pool:
 variables:
   serviceConnectionName: 'AzureServiceConnection'
   location: 'West Europe'
-  resourceGroupName: 'example-resources'
+  resourceGroupName: 'example-resources-001-test'
   storageAccountName: 'examplestorageacct'
   containerName: 'tfstate'
   tfStateKey: 'terraform.tfstate'
+
 steps:
-# Step 1: Initialize Terraform and apply the storage account configuration
 - task: UseTerraform@0
   inputs:
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/storage-account'
-    environmentServiceName: $(serviceConnectionName)
-  displayName: 'Terraform Init for Storage Account'
-
-- task: UseTerraform@0
-  inputs:
-    command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/storage-account'
-    environmentServiceName: $(serviceConnectionName)
-    additionalArgs: '-auto-approve'
-  displayName: 'Terraform Apply for Storage Account'
-
-# Step 2: Initialize Terraform for main infrastructure configuration using the created storage account for state
-- task: UseTerraform@0
-  inputs:
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/main-infra'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
     environmentServiceName: $(serviceConnectionName)
   displayName: 'Terraform Init for Main Infra'
 
 - task: UseTerraform@0
   inputs:
     command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/main-infra'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
     environmentServiceName: $(serviceConnectionName)
     additionalArgs: '-var "location=$(location)" -var "resource_group_name=$(resourceGroupName)"'
   displayName: 'Terraform Plan for Main Infra'
@@ -47,7 +31,7 @@ steps:
 - task: UseTerraform@0
   inputs:
     command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/main-infra'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
     environmentServiceName: $(serviceConnectionName)
     additionalArgs: '-auto-approve -var "location=$(location)" -var "resource_group_name=$(resourceGroupName)"'
   displayName: 'Terraform Apply for Main Infra'
