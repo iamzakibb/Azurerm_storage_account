@@ -1,13 +1,12 @@
 
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources-001-test"
-  location = var.location
+data "azurerm_resource_group" "example" {
+  name = "existing"
 }
 
 resource "azurerm_storage_account" "example" {
   name                     = "examplestorageacct"
-  resource_group_name      = azurerm_resource_group.example.name
-  location                 = azurerm_resource_group.example.location
+  resource_group_name      = data.azurerm_resource_group.example.name
+  location                 = data.azurerm_resource_group.example.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
@@ -19,15 +18,15 @@ resource "azurerm_storage_container" "example" {
 }
 
 
-resource "azurerm_resource_group" "example" {
-  name     = azurerm_resource_group.example.name
-  location = var.location
-}
+//resource "azurerm_resource_group" "example" {
+ // name     = data.azurerm_resource_group.example.name
+  //location = var.location
+//}
 
 resource "azurerm_app_service_plan" "example" {
   name                = "example-appserviceplan"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = data.azurerm_resource_group.example.location
+  resource_group_name = data.azurerm_resource_group.example.name
   sku {
     tier     = "Standard"
     size     = "S1"
@@ -36,8 +35,8 @@ resource "azurerm_app_service_plan" "example" {
 
 resource "azurerm_app_service" "example" {
   name                = "example-appservice"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = data.azurerm_resource_group.example.location
+  resource_group_name = data.azurerm_resource_group.example.name
   app_service_plan_id = azurerm_app_service_plan.example.id
 
   app_settings = {
@@ -52,15 +51,15 @@ resource "azurerm_app_service" "example" {
 
 resource "azurerm_application_insights" "example" {
   name                = "example-appinsights"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = data.azurerm_resource_group.example.location
+  resource_group_name = data.azurerm_resource_group.example.name
   application_type    = "web"
 }
 
 resource "azurerm_monitor_metric_alert" "example" {
   name                = "example-metric-alert"
-  resource_group_name = azurerm_resource_group.example.name
-  location            = azurerm_resource_group.example.location
+  resource_group_name = data.azurerm_resource_group.example.name
+  location            = data.azurerm_resource_group.example.location
   scopes              = [azurerm_app_service.example.id]
   description         = "An example metric alert"
   severity            = 3
@@ -83,7 +82,7 @@ resource "azurerm_monitor_metric_alert" "example" {
 
 resource "azurerm_monitor_action_group" "example" {
   name                = "example-actiongroup"
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = data.azurerm_resource_group.example.name
   short_name          = "example"
 
   email_receiver {
@@ -96,6 +95,6 @@ output "storage_account_name" {
   value = azurerm_storage_account.example.name
 }
 
-output "resource_group_name" {
-  value = azurerm_resource_group.example.name
-}
+//output "resource_group_name" {
+  //value = azurerm_resource_group.example.name
+//}
