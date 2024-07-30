@@ -5,12 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  serviceConnectionName: 'AzureServiceConnection'
-  location: 'West Europe'
-  resourceGroupName: 'example-resources-001-test'
-  storageAccountName: 'examplestorageacct'
-  containerName: 'tfstate'
-  tfStateKey: 'terraform.tfstate'
+- group: TerraformVariables
 
 steps:
 - task: UseTerraform@0
