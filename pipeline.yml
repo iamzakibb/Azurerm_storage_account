@@ -6,8 +6,17 @@ pool:
 
 variables:
 - group: TerraformVariables
+- name: http_proxy
+  value: 'http://proxyusername:proxypassword@proxyaddress:proxyport'
+- name: https_proxy
+  value: 'https://proxyusername:proxypassword@proxyaddress:proxyport'
 
 steps:
+- script: |
+    git config --global http.proxy $(http_proxy)
+    git config --global https.proxy $(https_proxy)
+  displayName: 'Configure Git Proxy'
+
 - task: UseTerraform@0
   inputs:
     command: 'init'
